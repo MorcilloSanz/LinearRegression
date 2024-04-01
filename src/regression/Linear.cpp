@@ -12,7 +12,11 @@ LinearRegression::LinearRegression(const Matrix& _input, const Vector& _y)
     size_t k = input[0].size();
 
     for(size_t i = 0; i < n; i ++) epsilon.push_back((std::rand() % 10) / 10.0);
-    for(size_t i = 0; i < k; i ++) theta.push_back(0.5);
+
+    for(size_t i = 0; i < k; i ++) {
+        if(k > 1) theta.push_back(1 / (k - 1));
+        else theta.push_back(1 / k);
+    }
 
 }
 LinearRegression::LinearRegression(const LinearRegression& linearRegression) 
