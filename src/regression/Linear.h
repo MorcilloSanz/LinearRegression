@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include <loss/Loss.h>
+#include "loss/Loss.h"
 
 namespace lr
 {
@@ -24,11 +24,11 @@ public:
 
     LinearRegression& operator=(const LinearRegression& linearRegression);
     LinearRegression& operator=(LinearRegression&& linearRegression) noexcept;
-private:
-    void copyFile(const std::string& origin, const std::string& dest);
 public:
     void train(int epochs, double learningRate = 0.1);
     Vector predict(const Matrix& input);
+
+    void load(const std::string& dir);
     void save(const std::string& dir);
 public:
     inline Vector& getLoss() { return loss; }

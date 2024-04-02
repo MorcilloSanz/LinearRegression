@@ -4,6 +4,8 @@
 #include <fstream>
 #include <filesystem>
 
+#include "util/Util.h"
+
 #define MODEL_NAME "model.txt"
 #define PLOT_NAME "plot.py"
 
@@ -54,22 +56,6 @@ LinearRegression& LinearRegression::operator=(LinearRegression&& linearRegressio
     return *this;
 }
 
-void LinearRegression::copyFile(const std::string& origin, const std::string& dest) {
-
-    std::ofstream fileOutput(dest);
-    std::ifstream fileIput(origin);
-
-    if(fileIput.is_open() && fileOutput.is_open()) {
-
-        std::string line;
-        while(getline (fileIput, line))
-            fileOutput << line << "\n";
-
-        fileIput.close();
-        fileOutput.close(); 
-    }
-}
-
 void LinearRegression::train(int epochs, double learningRate) {
 
     MSE mse;
@@ -107,6 +93,40 @@ Vector LinearRegression::predict(const Matrix& input) {
     return pred;
 }
 
+void LinearRegression::load(const std::string& dir) {
+
+    std::string filePath = dir + "/model/" + MODEL_NAME;
+
+    auto loadVec = [&](std::string& line, std::vector<double>& vector) {
+
+        std::string vec = Util::split(line, "=")[1];
+        vec = vec.substr(1, vec.size() - 2);
+
+        std::vector<std::string> elements = Util::split(vec, ",");
+        for(auto& e : elements)
+            vector.push_back(std::atof(e.c_str()));
+    };
+
+    std::ifstream file(filePath);
+    if(file.is_open()) {
+
+        bool first = true;
+        std::string line;
+        while(getline (file, line)) {
+
+            if(first) loadVec(line, theta);
+            else {
+                loadVec(line, epsilon);
+                break;
+            }
+
+            first = false;
+        }
+
+        file.close();
+    }
+}
+
 void LinearRegression::save(const std::string& dir) {
 
     std::string modelPath = dir + "/model";
@@ -119,7 +139,7 @@ void LinearRegression::save(const std::string& dir) {
 
     if(file.is_open()) {
 
-        file << "Weights (theta) = (";
+        file << "Weights(theta)=(";
         for(int i = 0; i < theta.size(); i ++) {
             if(i < theta.size() - 1)
                 file << theta[i] << ",";
@@ -127,7 +147,7 @@ void LinearRegression::save(const std::string& dir) {
                 file << theta[i] << ")\n";
         }
 
-        file << "Biases (epsilon) = (";
+        file << "Biases(epsilon)=(";
         for(int i = 0; i < epsilon.size(); i ++) {
             if(i < epsilon.size() - 1)
                 file << epsilon[i] << ",";
@@ -139,7 +159,7 @@ void LinearRegression::save(const std::string& dir) {
     }
 
     // Copy plot python program
-    copyFile("plot/plot.py", plotPath + "/" + PLOT_NAME);
+    Util::copyFile("plot/plot.py", plotPath + "/" + PLOT_NAME);
 
     // Copy loss function 
     std::ofstream lossFile(plotPath + "/loss.txt");

@@ -28,6 +28,7 @@ project(LinearRegression)
 set(HEADERS 
     loss/Loss.h
     regression/Linear.h
+    util/Util.h
 )
 
 # CPP files
