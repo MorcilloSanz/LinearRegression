@@ -2,9 +2,9 @@
 Linear regression and gradient descent in C++.
 
 ## Features
-* Train 
+* Train the model
 * Predict
-* Plot
+* Plot (`Python` and `matplotlib` needed)
 * Save model
 * Load saved model
 
@@ -33,21 +33,3 @@ Ground truth  | Prediction
 0.5 0.65 0.80 0.60  | 0.40 0.71 0.84 0.58
 
 ![](img/loss.png)
-
-```
-Epoch 1: loss -> 0.015625
-Epoch 2: loss -> 0.010727
-Epoch 3: loss -> 0.00778853
-Epoch 4: loss -> 0.00603281
-Epoch 5: loss -> 0.00498947
-Epoch 6: loss -> 0.00437399
-Epoch 7: loss -> 0.00401452
-Epoch 8: loss -> 0.00380747
-Epoch 9: loss -> 0.00369056
-Epoch 10: loss -> 0.00362649
-Epoch 11: loss -> 0.00359301
-.
-.
-.
-Epoch 50: loss -> 0.00359054
-```
