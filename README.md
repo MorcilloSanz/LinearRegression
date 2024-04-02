@@ -1,5 +1,10 @@
 # LinearRegression
-Linear regression and gradient descent in C++.
+In statistics, linear regression is a statistical model which estimates the linear
+relationship between a scalar response and one or more explanatory variables. In
+linear regression, the relationships are modeled using linear predictor functions
+whose unknown model parameters are estimated from the data.
+
+[Take a look at the math](Linear_regression.pdf)
 
 ## Features
 * Train the model
@@ -7,24 +12,6 @@ Linear regression and gradient descent in C++.
 * Plot (`Python` and `matplotlib` needed)
 * Save model
 * Load saved model
-
-# Algorithm
-
-**Weights and biases**
-
-* Generate weights vector (uniformly distributed): $\theta$
-* Generate the biases vector with random numbers [0,1]: $\varepsilon$.
-
-**Training**
-
-* (1) Compute linear regression: 
-$$\hat{y} = X \theta + \varepsilon$$
-* (2) Compute loss function and its gradient:
-$$\nabla L = \left( \frac{\partial L}{\partial \theta_{j}}, \frac{\partial L}{\partial \varepsilon_{i}} \right)$$
-* (3) Apply gradient descent: 
-$$\theta^{t+1}_{j} = \theta^{t}_{j} + \gamma \frac{\partial L}{\partial \theta_{j}}$$
-$$\varepsilon^{t+1}_{i} = \varepsilon^{t}_{i} + \gamma \frac{\partial L}{\partial \varepsilon_{i}}$$
-* (4) Go back to step 1 for a specified number of epochs.
 
 # Test
 

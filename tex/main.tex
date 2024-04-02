@@ -1,0 +1,99 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\title{Linear regression}
+\author{Alberto Morcillo Sanz}
+\date{April 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+In statistics, \href{https://en.wikipedia.org/wiki/Linear_regression}{linear regression} is a statistical model which estimates the linear relationship between a scalar response and one or more explanatory variables.
+In linear regression, the relationships are modeled using linear predictor functions whose unknown model parameters are estimated from the data.
+
+\section{Formulation}
+Given a dataset $\{y_i; x_{i1}, x_{i2}, \cdots, x_{ik}\}$ of $k$ statistical units, a linear regression model assumes that the relationship between the dependent variable $y$ and the vector of regressors $x$ is linear. This relationship is modeled through a disturbance term or error variable $\varepsilon$ that adds "noise" to the linear relationship between the dependent variable and regressors. Thus the model takes the form:
+$$\hat{y} = X\theta + \varepsilon$$
+Where: 
+$$
+X = \begin{pmatrix}
+1 & x_{11} & x_{12} & \cdots & x_{1k} \\ 
+1 & x_{21} & x_{22} & \cdots & x_{2k} \\ 
+\vdots & \vdots & \vdots & \ddots  & \vdots \\ 
+1 & x_{n1} & x_{n2} & \cdots & x_{nk} \\ 
+\end{pmatrix}, \theta = 
+\begin{pmatrix}
+\theta_0\\ 
+\theta_1\\ 
+\vdots\\ 
+\theta_k
+\end{pmatrix}, \varepsilon = 
+\begin{pmatrix}
+\varepsilon_1\\ 
+\varepsilon_2\\ 
+\vdots\\ 
+\varepsilon_n
+\end{pmatrix}
+$$
+We can say that the vector $\theta$ represents the weights and the vector $\varepsilon$ represents the biases. Thus each $\hat{y}_i \in \hat{y}$ can be expressed as:
+$$\hat{y}_i = \theta_0 + \theta_1 x_{i1} + \theta_2 x_{i2} + \cdots + \theta_k x_{ik} + \varepsilon_i = \sum^{k}_{j=0}\theta_j x_{ij} + \varepsilon_i$$
+
+\section{Training}
+To find the appropriate weights and biases, we can train the model by minimizing a loss function using Gradient Descent. So the training procedure is something like:
+
+\subsection{Training algorithm}
+\begin{itemize}
+    \item Generate the $\theta$ and $\varepsilon$ vectors (I like to initially set the value $\frac{1}{k}$ to each element in $\theta$ and a random number between $0$ and $1$ to each element of $\varepsilon$).
+    \item Apply the linear regression equation and compute the loss function $L$.
+    \item Compute the gradient of the loss function $\nabla L$ and apply the Gradient Descent equations:
+    $$\theta^{t+1}_{j} = \theta^{t}_{j} - \gamma \frac{\partial L}{\partial \theta_j}$$
+    $$\varepsilon^{t+1}_{i} = \varepsilon^{t}_{i} - \gamma \frac{\partial L}{\partial \varepsilon_i}$$
+    \item Repeat the previous two steps until the loss function is close enough to zero.
+\end{itemize}
+
+\subsection{Loss function}
+In this case, we will consider the MSE function:
+$$L = \frac{1}{n} \sum^{n}_{i=1}\left(y_i - \hat{y}_i \right)^2$$
+Thus the gradient of $L$ is defined as:
+$$\nabla L = \left( \frac{\partial L}{\partial \theta_j}, \frac{\partial L}{\partial \varepsilon_i}\right) = \frac{1}{n} \left[ \frac{\partial}{\partial \theta_j} \sum^{n}_{i=1}\left(y_i - \hat{y}_i \right)^2, \frac{\partial}{\partial \varepsilon_i} \sum^{n}_{i=1}\left(y_i - \hat{y}_i \right)^2 \right]$$
+
+\begin{itemize}
+    \item Partial derivative of $L$ with respect to $\theta_j$:
+    $$\frac{\partial L}{\partial \theta_j} = \frac{1}{n} \frac{\partial}{\partial \theta_j} \sum^{n}_{i=1}\left(y_i - \hat{y}_i \right)^2 = \frac{1}{n} \sum^{n}_{i=1} \frac{\partial}{\partial \theta_j} \left(y_i - \hat{y}_i \right)^2= $$
+    $$= \frac{1}{n} \sum^{n}_{i=1} 2\left(y_i - \hat{y}_i \right)\frac{\partial}{\partial \theta_j} \left(y_i - \hat{y}_i \right) = - \frac{2}{n} \sum^{n}_{i=1} \left(y_i - \hat{y}_i \right)\frac{\partial \hat{y}_i}{\partial \theta_j}$$
+    \begin{itemize}
+        \item Partial derivative of $\hat{y}_i$ with respect to $\theta_j$:
+        $$\frac{\partial \hat{y}_i}{\partial \theta_j} = \frac{\partial}{\partial \theta_j}\left( \sum^{k}_{j=0}\theta_j x_{ij} + \varepsilon_i \right) = \frac{\partial}{\partial \theta_j} \sum^{k}_{j=0}\theta_j x_{ij} + \frac{\partial \varepsilon_i}{\partial \theta_j}=\sum^{k}_{j=0} x_{ij} \frac{\partial \theta_j}{\partial \theta_j} = \sum^{k}_{j=0}x_{ij}$$
+    \end{itemize}
+    Then,
+    \begin{equation}
+    \boxed{\frac{\partial L}{\partial \theta_j} = - \frac{2}{n} \sum^{n}_{i=1} \left[ \left(y_i - \hat{y}_i \right)\sum^{k}_{j=0}x_{ij} \right]}
+    \end{equation}
+    \item Partial derivative of $L$ with respect to $\varepsilon_i$:
+    $$\frac{\partial L}{\partial \varepsilon_i} = \frac{1}{n} \frac{\partial}{\partial \varepsilon_i} \sum^{n}_{i=1}\left(y_i - \hat{y}_i \right)^2 = \frac{1}{n} \sum^{n}_{i=1} \frac{\partial}{\partial \varepsilon_i} \left(y_i - \hat{y}_i \right)^2= $$
+    $$= \frac{1}{n} \sum^{n}_{i=1} 2\left(y_i - \hat{y}_i \right)\frac{\partial}{\partial \varepsilon_i} \left(y_i - \hat{y}_i \right) = - \frac{2}{n} \sum^{n}_{i=1} \left(y_i - \hat{y}_i \right)\frac{\partial \hat{y}_i}{\partial \varepsilon_i}$$
+    \begin{itemize}
+        \item Partial derivative of $\hat{y}_i$ with respect to $\varepsilon_i$:
+        $$\frac{\partial \hat{y}_i}{\partial \varepsilon_i} = \frac{\partial}{\partial \varepsilon_i}\left( \sum^{k}_{j=0}\theta_j x_{ij} + \varepsilon_i \right) = \frac{\partial}{\partial \varepsilon_i} \sum^{k}_{j=0}\theta_j x_{ij} + \frac{\partial \varepsilon_i}{\partial \varepsilon_i} = 1$$
+    \end{itemize}
+    Then,
+    \begin{equation}
+    \boxed{\frac{\partial L}{\partial \varepsilon_i} = - \frac{2}{n} \sum^{n}_{i=1} \left(y_i - \hat{y}_i \right)}
+    \end{equation}
+\end{itemize}
+So, finally $\nabla L$ is defined as:
+$$\nabla L = \left( \frac{\partial L}{\partial \theta_j}, \frac{\partial L}{\partial \varepsilon_i}\right)= - \frac{2}{n}\left(  \sum^{n}_{i=1} \left[ \left(y_i - \hat{y}_i \right)\sum^{k}_{j=0}x_{ij} \right], \sum^{n}_{i=1} \left(y_i - \hat{y}_i \right)\right)$$
+
+\subsection{Gradient Descent}
+
+In mathematics gradient descent (also often called steepest descent) is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function. The idea is to take repeated steps in the opposite direction of the gradient (or approximate gradient) of the function at the current point, because this is the direction of steepest descent. Conversely, stepping in the direction of the gradient will lead to a local maximum of that function; the procedure is then known as gradient ascent.
+
+$$\theta^{t+1}_{j} = \theta^{t}_{j} - \gamma \frac{\partial L}{\partial \theta_j}$$
+$$\varepsilon^{t+1}_{i} = \varepsilon^{t}_{i} - \gamma \frac{\partial L}{\partial \varepsilon_i}$$
+Where $\gamma \in \mathbf{R}$ is a scalar called learning rate.
+
+\end{document}
