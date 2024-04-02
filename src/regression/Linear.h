@@ -13,6 +13,7 @@ private:
     Matrix input;
     Vector y;
     Vector theta, epsilon;
+    Vector loss;
 public:
     LinearRegression(const Matrix& _input, const Vector& _y);
     LinearRegression(const LinearRegression& linearRegression);
@@ -23,9 +24,16 @@ public:
 
     LinearRegression& operator=(const LinearRegression& linearRegression);
     LinearRegression& operator=(LinearRegression&& linearRegression) noexcept;
+private:
+    void copyFile(const std::string& origin, const std::string& dest);
 public:
-    Vector train(int epochs, double learningRate = 0.1);
+    void train(int epochs, double learningRate = 0.1);
     Vector predict(const Matrix& input);
+    void save(const std::string& dir);
+public:
+    inline Vector& getLoss() { return loss; }
+    inline Vector& getTheta() { return theta; }
+    inline Vector& getEpsilon() { return epsilon; }
 };
 
 }

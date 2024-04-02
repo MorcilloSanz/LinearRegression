@@ -34,8 +34,15 @@ set(SOURCES
     src/main.cpp
 )
 
+# Copy plot python files
+set(PYTHON_FILES_PATH "${CMAKE_SOURCE_DIR}/src/plot")
+file(GLOB python_files ${PYTHON_FILES_PATH}/*.py ${PYTHON_FILES_PATH}/*.pyw)
+foreach(filename ${python_files} )
+    file(COPY ${filename} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/plot)
+endforeach()
+
 # Executable
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Linker
-target_link_libraries(${PROJECT_NAME} linear-regression)
+target_link_libraries(${PROJECT_NAME} LinearRegression)

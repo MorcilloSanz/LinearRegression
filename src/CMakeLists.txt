@@ -22,7 +22,7 @@
     SOFTWARE.
 ]]
 
-project(linear-regression)
+project(LinearRegression)
 
 # Header Files
 set(HEADERS 

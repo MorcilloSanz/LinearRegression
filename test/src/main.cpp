@@ -21,10 +21,7 @@ int main() {
     int epochs = 50;
     double learningRate = 0.001;
 
-    lr::Vector loss = linearRegression.train(epochs, learningRate);
-
-    for(int i = 0; i < loss.size(); i ++) 
-        std::cout << "Epoch " << i + 1 << ": loss -> " << loss[i] << std::endl;
+    linearRegression.train(epochs, learningRate);
 
     // Linear regression prediction
     lr::Vector prediction = linearRegression.predict(trainingInput); // Predict with training data to see if the prediction matches the output
@@ -32,6 +29,9 @@ int main() {
     std::cout << "Prediction: ";
     for(auto& pred : prediction) std::cout << pred << " ";
     std::cout << std::endl;
+
+    // Save model
+    linearRegression.save("/home/morcillosanz/Desktop/");
 
     return 0;
 }

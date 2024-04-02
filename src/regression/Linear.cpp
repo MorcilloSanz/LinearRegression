@@ -1,6 +1,13 @@
 #include "Linear.h"
 
 #include <cstdlib> 
+#include <fstream>
+#include <filesystem>
+
+#define MODEL_NAME "model.txt"
+#define PLOT_NAME "plot.py"
+
+namespace fs = std::filesystem;
 
 namespace lr
 {
@@ -47,10 +54,25 @@ LinearRegression& LinearRegression::operator=(LinearRegression&& linearRegressio
     return *this;
 }
 
-Vector LinearRegression::train(int epochs, double learningRate) {
+void LinearRegression::copyFile(const std::string& origin, const std::string& dest) {
 
-    Vector loss;
-    lr::MSE mse;
+    std::ofstream fileOutput(dest);
+    std::ifstream fileIput(origin);
+
+    if(fileIput.is_open() && fileOutput.is_open()) {
+
+        std::string line;
+        while(getline (fileIput, line))
+            fileOutput << line << "\n";
+
+        fileIput.close();
+        fileOutput.close(); 
+    }
+}
+
+void LinearRegression::train(int epochs, double learningRate) {
+
+    MSE mse;
 
     for(int epoch = 0; epoch < epochs; epoch ++) {
 
@@ -66,8 +88,6 @@ Vector LinearRegression::train(int epochs, double learningRate) {
 
         loss.push_back(_loss);
     }
-
-    return loss;
 }
 
 Vector LinearRegression::predict(const Matrix& input) {
@@ -85,6 +105,55 @@ Vector LinearRegression::predict(const Matrix& input) {
     }
 
     return pred;
+}
+
+void LinearRegression::save(const std::string& dir) {
+
+    std::string modelPath = dir + "/model";
+    fs::create_directories(modelPath);
+
+    std::string plotPath = modelPath + "/plot";
+    fs::create_directories(plotPath);
+
+    std::ofstream file(modelPath + "/" + MODEL_NAME);
+
+    if(file.is_open()) {
+
+        file << "Weights (theta) = (";
+        for(int i = 0; i < theta.size(); i ++) {
+            if(i < theta.size() - 1)
+                file << theta[i] << ",";
+            else
+                file << theta[i] << ")\n";
+        }
+
+        file << "Biases (epsilon) = (";
+        for(int i = 0; i < epsilon.size(); i ++) {
+            if(i < epsilon.size() - 1)
+                file << epsilon[i] << ",";
+            else
+                file << epsilon[i] << ")\n";
+        }
+
+        file.close();
+    }
+
+    // Copy plot python program
+    copyFile("plot/plot.py", plotPath + "/" + PLOT_NAME);
+
+    // Copy loss function 
+    std::ofstream lossFile(plotPath + "/loss.txt");
+
+    if(lossFile.is_open()) {
+
+        for(int i = 0; i < loss.size(); i ++) {
+            if(i < loss.size() - 1) lossFile << loss[i] << " ";
+            else lossFile << loss[i];
+        }
+
+        lossFile.close();
+    }
+
 }
 
 }
