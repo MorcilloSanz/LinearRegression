@@ -173,7 +173,6 @@ void LinearRegression::save(const std::string& dir) {
 
         lossFile.close();
     }
-
 }
 
 }

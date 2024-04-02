@@ -1,5 +1,12 @@
 # LinearRegression
-LinearRegression and gradient descent from scratch.
+Linear regression and gradient descent in C++.
+
+## Features
+* Train 
+* Predict
+* Plot
+* Save model
+* Load saved model
 
 # Algorithm
 
@@ -18,9 +25,6 @@ $$\nabla L = \left( \frac{\partial L}{\partial \theta_{j}}, \frac{\partial L}{\p
 $$\theta^{t+1}_{j} = \theta^{t}_{j} + \gamma \frac{\partial L}{\partial \theta_{j}}$$
 $$\varepsilon^{t+1}_{i} = \varepsilon^{t}_{i} + \gamma \frac{\partial L}{\partial \varepsilon_{i}}$$
 * (4) Go back to step 1 for a specified number of epochs.
-
-# Math
-![](img/math.png)
 
 # Test
 
