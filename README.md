@@ -16,7 +16,7 @@ $$\hat{y} = X\theta + \varepsilon$$
 * **Save** the model in order to use it later.
 * **Load** saved model.
 
-# Test: Stock price forecast
+# Test: stock price forecast
 
 ### Stock data
 | Income (millions USD) | Earnings (millions USD) | P/E Ratio | P/B Ratio | Interest Rate (%)  | Inflation Rate (%) | Closing Price (USD) |
