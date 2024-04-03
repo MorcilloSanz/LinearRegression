@@ -61,12 +61,8 @@ void training() {
     lr::LinearRegression linearRegression(input, output);
 
     // Linear regression training
-    int epochs = 800;
-    double learningRate = 1e-10;
-
-    // Exponential decay (OPTIONAL. Improves training)
-    lr::LinearRegression::ExponentialDecay exponentialDecay(learningRate, 0.75, 225);
-    linearRegression.setExponentialDecay(exponentialDecay);
+    int epochs = 75;
+    double learningRate = 1.5e-8;
 
     // Train
     linearRegression.train(epochs, learningRate);

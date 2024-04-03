@@ -15,16 +15,16 @@ public:
 
         double initialLearningRate;
         double decayRate;
-        double decaySteps;
 
-        ExponentialDecay(double _initialLearningRate, double _decayRate, double _decaySteps)
-            : initialLearningRate(_initialLearningRate), decayRate(_decayRate), decaySteps(_decaySteps) { }
+        ExponentialDecay(double _initialLearningRate, double _decayRate)
+            : initialLearningRate(_initialLearningRate), decayRate(_decayRate) { 
+        }
 
         ExponentialDecay() = default;
         ~ExponentialDecay() = default;
 
-        inline double getLearningRate(double globalStep) {
-            return initialLearningRate * pow(decayRate, globalStep / decaySteps);
+        inline double getLearningRate(double t) {
+            return initialLearningRate * exp(-decayRate * t);
         }
     };
 private:
