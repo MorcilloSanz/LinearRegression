@@ -15,12 +15,13 @@ namespace lr
 {
 
 LinearRegression::LinearRegression(const Matrix& _input, const Vector& _y) 
-    : input(_input), y(_y) {
+    : input(_input), y(_y), hasExponentialDecay(false) {
 
     size_t n = y.size();
     size_t k = input[0].size();
 
-    for(size_t i = 0; i < n; i ++) epsilon.push_back((std::rand() % 10) / 10.0);
+    for(size_t i = 0; i < n; i ++) 
+        epsilon.push_back((std::rand() % 10) / 10.0);
 
     for(size_t i = 0; i < k; i ++) {
         if(k > 1) theta.push_back(1 / (k - 1));
@@ -30,12 +31,16 @@ LinearRegression::LinearRegression(const Matrix& _input, const Vector& _y)
 }
 LinearRegression::LinearRegression(const LinearRegression& linearRegression) 
     : input(linearRegression.input), y(linearRegression.y), 
-    theta(linearRegression.theta), epsilon(linearRegression.epsilon) {
+    theta(linearRegression.theta), epsilon(linearRegression.epsilon),
+    exponentialDecay(linearRegression.exponentialDecay), 
+    hasExponentialDecay(linearRegression.hasExponentialDecay) {
 }
 
 LinearRegression::LinearRegression(LinearRegression&& linearRegression) noexcept
     : input(std::move(linearRegression.input)), y(std::move(linearRegression.y)), 
-    theta(std::move(linearRegression.theta)), epsilon(std::move(linearRegression.epsilon)) {
+    theta(std::move(linearRegression.theta)), epsilon(std::move(linearRegression.epsilon)),
+    exponentialDecay(std::move(linearRegression.exponentialDecay)),
+    hasExponentialDecay(linearRegression.hasExponentialDecay) {
 }
 
 LinearRegression& LinearRegression::operator=(const LinearRegression& linearRegression) {
@@ -44,6 +49,9 @@ LinearRegression& LinearRegression::operator=(const LinearRegression& linearRegr
     y = linearRegression.y;
     theta = linearRegression.theta;
     epsilon = linearRegression.epsilon;
+    exponentialDecay = linearRegression.exponentialDecay;
+    hasExponentialDecay = linearRegression.hasExponentialDecay;
+
     return *this;
 }
 
@@ -53,7 +61,15 @@ LinearRegression& LinearRegression::operator=(LinearRegression&& linearRegressio
     y = std::move(linearRegression.y);
     theta = std::move(linearRegression.theta);
     epsilon = std::move(linearRegression.epsilon);
+    exponentialDecay = std::move(linearRegression.exponentialDecay);
+    hasExponentialDecay = linearRegression.hasExponentialDecay;
+
     return *this;
+}
+
+void LinearRegression::setExponentialDecay(const ExponentialDecay& exponentialDecay) {
+    this->exponentialDecay = exponentialDecay;
+    hasExponentialDecay = true;
 }
 
 void LinearRegression::train(int epochs, double learningRate) {
@@ -68,6 +84,9 @@ void LinearRegression::train(int epochs, double learningRate) {
         // Gradient descent
         double _loss = mse.evaluate(y, pred);
         Vector gradient = mse.gradient(input, y, pred);
+
+        if(hasExponentialDecay) 
+            learningRate = exponentialDecay.getLearningRate(epoch);
 
         for(auto& t : theta) t -= learningRate * gradient[0];
         for(auto& e : epsilon) e -= learningRate * gradient[1];

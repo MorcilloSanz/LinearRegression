@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "loss/Loss.h"
 
@@ -9,11 +10,32 @@ namespace lr
 {
 
 class LinearRegression {
+public:
+    struct ExponentialDecay {
+
+        double initialLearningRate;
+        double decayRate;
+        double decaySteps;
+
+        ExponentialDecay(double _initialLearningRate, double _decayRate, double _decaySteps)
+            : initialLearningRate(_initialLearningRate), decayRate(_decayRate), decaySteps(_decaySteps) { }
+
+        ExponentialDecay() = default;
+        ~ExponentialDecay() = default;
+
+        inline double getLearningRate(double globalStep) {
+            return initialLearningRate * pow(decayRate, globalStep / decaySteps);
+        }
+    };
 private:
     Matrix input;
     Vector y;
+
     Vector theta, epsilon;
     Vector loss;
+
+    ExponentialDecay exponentialDecay;
+    bool hasExponentialDecay;
 public:
     LinearRegression(const Matrix& _input, const Vector& _y);
     LinearRegression(const LinearRegression& linearRegression);
@@ -25,6 +47,8 @@ public:
     LinearRegression& operator=(const LinearRegression& linearRegression);
     LinearRegression& operator=(LinearRegression&& linearRegression) noexcept;
 public:
+
+    void setExponentialDecay(const ExponentialDecay& exponentialDecay);
     void train(int epochs, double learningRate = 0.1);
     Vector predict(const Matrix& input);
 
