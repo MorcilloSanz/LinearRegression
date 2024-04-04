@@ -33,8 +33,8 @@ Vector MSE::gradient(const Matrix& input, const Vector& y, const Vector& pred) {
         partialEpsilon += diff;
     }
 
-    partialTheta /= -(2.0 / y.size());
-    partialEpsilon /= -(2.0 / y.size());
+    partialTheta *= -(2.0 / y.size());
+    partialEpsilon *= -(2.0 / y.size());
 
     return { partialTheta, partialEpsilon };
 }
