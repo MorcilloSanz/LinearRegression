@@ -65,9 +65,6 @@ void training() {
     double learningRate = 1e-7;
 
     // Train
-    lr::LinearRegression::ExponentialDecay exponentialDecay(learningRate, 0.01);
-    //linearRegression.setExponentialDecay(exponentialDecay);
-
     linearRegression.train(epochs, learningRate);
 
     // Show loss

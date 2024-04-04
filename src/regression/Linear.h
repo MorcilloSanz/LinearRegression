@@ -47,11 +47,9 @@ public:
     LinearRegression& operator=(const LinearRegression& linearRegression);
     LinearRegression& operator=(LinearRegression&& linearRegression) noexcept;
 public:
-
     void setExponentialDecay(const ExponentialDecay& exponentialDecay);
-    void train(int epochs, double learningRate = 0.1);
+    void train(int epochs, double learningRate = 0.001);
     Vector predict(const Matrix& input);
-
     void load(const std::string& dir);
     void save(const std::string& dir);
 public:
